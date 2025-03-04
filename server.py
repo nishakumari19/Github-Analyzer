@@ -13,11 +13,11 @@ def get_repo_details(owner, repo):
     if response.status_code == 200:
         data = response.json()
         return {
-            "name": data["name"],
-            "description": data["description"],
-            "stars": data["stargazers_count"],
-            "forks": data["forks_count"],
-            "language": data["language"]
+            "name": data.get("name"),
+            "description": data.get("description"),
+            "stars": data.get("stargazers_count"),
+            "forks": data.get("forks_count"),
+            "language": data.get("language")
         }
     else:
         return {"error": "Repository not found"}
