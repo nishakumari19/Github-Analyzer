@@ -12,7 +12,7 @@ export default function Home() {
     setData(null);
 
     try {
-      const res = await axios.get(`/api/github?repoOwner=${owner}&repoName=${repo}`);
+      const res = await axios.get(`/api/github?owner=${owner}&repo=${repo}`);
       setData(res.data);
     } catch (err) {
       setError("Repository not found. Please check the name.");
