@@ -2,8 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function Home() {
-  const [repoOwner, setRepoOwner] = useState("");
-  const [repoName, setRepoName] = useState("");
+  const [owner, setOwner] = useState("");
+  const [repo, setRepo] = useState("");
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
@@ -12,7 +12,7 @@ export default function Home() {
     setData(null);
 
     try {
-      const res = await axios.get(`/api/github?repoOwner=${repoOwner}&repoName=${repoName}`);
+      const res = await axios.get(`/api/github?repoOwner=${owner}&repoName=${repo}`);
       setData(res.data);
     } catch (err) {
       setError("Repository not found. Please check the name.");
@@ -21,8 +21,8 @@ export default function Home() {
 
   const resetForm = () => {
     setData(null);
-    setRepoOwner("");
-    setRepoName("");
+    setOwner("");
+    setRepo("");
   };
 
   return (
@@ -34,15 +34,15 @@ export default function Home() {
         type="text"
         placeholder="Repository Owner"
         className="p-2 border rounded mr-2 mb-4"
-        value={repoOwner}
-        onChange={(e) => setRepoOwner(e.target.value)}
+        value={owner}
+        onChange={(e) => setOwner(e.target.value)}
       />
       <input
         type="text"
         placeholder="Repository Name"
         className="p-2 border rounded mr-2 mb-4"
-        value={repoName}
-        onChange={(e) => setRepoName(e.target.value)}
+        value={repo}
+        onChange={(e) => setRepo(e.target.value)}
       />
       <button className="p-2 bg-blue-500 text-white rounded cursor-pointer" onClick={fetchData}>
         Analyze
