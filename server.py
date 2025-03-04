@@ -6,6 +6,22 @@ app = Flask(__name__)
 
 GITHUB_API_URL = "https://api.github.com/repos"
 
+def get_repo_details(owner, repo):
+    url = f"{GITHUB_API_URL}/{owner}/{repo}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            "name": data["name"],
+            "description": data["description"],
+            "stars": data["stargazers_count"],
+            "forks": data["forks_count"],
+            "language": data["language"]
+        }
+    else:
+        return {"error": "Repository not found"}
+
 @app.route("/analyze", methods=["GET"])
 def analyze_repo():
     owner = request.args.get("owner")
@@ -14,20 +30,9 @@ def analyze_repo():
     if not owner or not repo:
         return jsonify({"error": "Please provide both owner and repo parameters"}), 400
 
-    url = f"{GITHUB_API_URL}/{owner}/{repo}"
-    response = requests.get(url)
-
-    if response.status_code != 200:
-        return jsonify({"error": "Repository not found"}), 404
-
-    data = response.json()
-    result = {
-        "name": data.get("name"),
-        "description": data.get("description"),
-        "stars": data.get("stargazers_count"),
-        "forks": data.get("forks_count"),
-        "language": data.get("language"),
-    }
+    result = get_repo_details(owner, repo)
+    if "error" in result:
+        return jsonify(result), 404
     return jsonify(result)
 
 if __name__ == "__main__":
